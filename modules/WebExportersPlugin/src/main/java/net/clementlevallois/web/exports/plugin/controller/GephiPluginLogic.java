@@ -7,8 +7,11 @@ package net.clementlevallois.web.exports.plugin.controller;
  *
  * @author LEVALLOIS
  */
+import com.google.gson.JsonObject;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -36,11 +39,16 @@ public final class GephiPluginLogic implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        String initialValue = "Publish";
+        String cancel = "Cancel";
+        String[] options = new String[]{initialValue, cancel};
         JPanelWebExport jPanelWebExport = new JPanelWebExport();
-        DialogDescriptor dd = new DialogDescriptor(jPanelWebExport, "Publish to the web");
-        Object response = DialogDisplayer.getDefault().notify(dd);
-        if (response != NotifyDescriptor.OK_OPTION) {
-            return;
-        }
+        NotifyDescriptor dd = new NotifyDescriptor(jPanelWebExport,
+                "Publish to the web",
+                NotifyDescriptor.YES_NO_OPTION,
+                NotifyDescriptor.PLAIN_MESSAGE,
+                options,
+                initialValue);
+        String selectedValue = (String) DialogDisplayer.getDefault().notify(dd);
     }
 }

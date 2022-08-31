@@ -4,7 +4,11 @@
 package net.clementlevallois.web.exports.plugin.controller;
 
 import com.google.gson.JsonObject;
-
+import java.util.prefs.Preferences;
+import javax.swing.JCheckBox;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -12,17 +16,22 @@ import com.google.gson.JsonObject;
  */
 public class JPanelWebExport extends javax.swing.JPanel {
 
-    JsonObject responsePublishingAction;
+    private JsonObject responseGithubConnectAction;
 
     /**
      * Creates new form JPanelWebExport
      */
     public JPanelWebExport() {
         initComponents();
-        jLabelPromptCopyUrl.setVisible(false);
-        jTextUrlPublishedNetwork.setVisible(false);
-        jTextAreaErrorMessage.setVisible(false);
-        jTextAreaErrorMessage.setText("");
+        jTextFieldUserCode.setVisible(false);
+    }
+
+    public JTextField getjTextFieldUserCode() {
+        return jTextFieldUserCode;
+    }
+
+    public JsonObject getResponseGithubConnectAction() {
+        return responseGithubConnectAction;
     }
 
     /**
@@ -35,122 +44,90 @@ public class JPanelWebExport extends javax.swing.JPanel {
     private void initComponents() {
 
         tabs = new javax.swing.JTabbedPane();
-        tabNoGithub = new javax.swing.JPanel();
         tabGithub = new javax.swing.JPanel();
-        jButtonGithubPublish = new javax.swing.JButton();
-        jButtonGithubCancel = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextAreaNoGithub = new javax.swing.JTextArea();
-        jTextFieldNoGithubFilename = new javax.swing.JTextField();
-        jLabelPromptChooseNetworkFilename = new javax.swing.JLabel();
-        jTextUrlPublishedNetwork = new javax.swing.JTextField();
-        jLabelPromptCopyUrl = new javax.swing.JLabel();
-        jScrollPaneErrorMessage = new javax.swing.JScrollPane();
-        jTextAreaErrorMessage = new javax.swing.JTextArea();
+        jButtonGithubConnect = new javax.swing.JButton();
+        jLabelPromptUserCode = new javax.swing.JLabel();
+        jTextFieldUserCode = new javax.swing.JTextField();
+        jLabelPromptWebsiteLogin = new javax.swing.JLabel();
+        jTextFieldWebsiteLoginUrl = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jTextFieldGithubErrorMsg = new javax.swing.JTextField();
 
-        javax.swing.GroupLayout tabNoGithubLayout = new javax.swing.GroupLayout(tabNoGithub);
-        tabNoGithub.setLayout(tabNoGithubLayout);
-        tabNoGithubLayout.setHorizontalGroup(
-            tabNoGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 663, Short.MAX_VALUE)
-        );
-        tabNoGithubLayout.setVerticalGroup(
-            tabNoGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 392, Short.MAX_VALUE)
-        );
-
-        tabs.addTab(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.tabNoGithub.TabConstraints.tabTitle"), tabNoGithub); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jButtonGithubPublish, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jButtonGithubPublish.text")); // NOI18N
-        jButtonGithubPublish.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(jButtonGithubConnect, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jButtonGithubConnect.text")); // NOI18N
+        jButtonGithubConnect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonGithubPublishActionPerformed(evt);
+                jButtonGithubConnectActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButtonGithubCancel, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jButtonGithubCancel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelPromptUserCode, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jLabelPromptUserCode.text")); // NOI18N
 
-        jTextAreaNoGithub.setEditable(false);
-        jTextAreaNoGithub.setColumns(20);
-        jTextAreaNoGithub.setLineWrap(true);
-        jTextAreaNoGithub.setRows(5);
-        jTextAreaNoGithub.setText(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jTextAreaNoGithub.text")); // NOI18N
-        jScrollPane1.setViewportView(jTextAreaNoGithub);
+        jTextFieldUserCode.setText(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jTextFieldUserCode.text")); // NOI18N
 
-        jTextFieldNoGithubFilename.setText(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jTextFieldNoGithubFilename.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelPromptWebsiteLogin, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jLabelPromptWebsiteLogin.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabelPromptChooseNetworkFilename, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jLabelPromptChooseNetworkFilename.text")); // NOI18N
-
-        jTextUrlPublishedNetwork.setEditable(false);
-        jTextUrlPublishedNetwork.setText(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jTextUrlPublishedNetwork.text")); // NOI18N
-        jTextUrlPublishedNetwork.addActionListener(new java.awt.event.ActionListener() {
+        jTextFieldWebsiteLoginUrl.setText(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jTextFieldWebsiteLoginUrl.text")); // NOI18N
+        jTextFieldWebsiteLoginUrl.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextUrlPublishedNetworkActionPerformed(evt);
+                jTextFieldWebsiteLoginUrlActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabelPromptCopyUrl, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jLabelPromptCopyUrl.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jLabel1.text")); // NOI18N
 
-        jScrollPaneErrorMessage.setForeground(new java.awt.Color(255, 0, 0));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jLabel2.text")); // NOI18N
 
-        jTextAreaErrorMessage.setColumns(20);
-        jTextAreaErrorMessage.setForeground(new java.awt.Color(255, 51, 51));
-        jTextAreaErrorMessage.setRows(3);
-        jScrollPaneErrorMessage.setViewportView(jTextAreaErrorMessage);
+        jTextFieldGithubErrorMsg.setForeground(new java.awt.Color(255, 0, 0));
+        jTextFieldGithubErrorMsg.setText(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jTextFieldGithubErrorMsg.text")); // NOI18N
 
         javax.swing.GroupLayout tabGithubLayout = new javax.swing.GroupLayout(tabGithub);
         tabGithub.setLayout(tabGithubLayout);
         tabGithubLayout.setHorizontalGroup(
             tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabGithubLayout.createSequentialGroup()
-                .addComponent(jTextUrlPublishedNetwork)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabGithubLayout.createSequentialGroup()
-                .addGroup(tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, tabGithubLayout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addComponent(jButtonGithubPublish)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonGithubCancel))
-                    .addGroup(tabGithubLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabelPromptChooseNetworkFilename)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextFieldNoGithubFilename, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(tabGithubLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1)))
-                .addGap(44, 44, 44))
             .addGroup(tabGithubLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPaneErrorMessage)
-                .addContainerGap())
-            .addGroup(tabGithubLayout.createSequentialGroup()
-                .addGap(177, 177, 177)
-                .addComponent(jLabelPromptCopyUrl)
-                .addContainerGap(209, Short.MAX_VALUE))
+                .addGroup(tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(tabGithubLayout.createSequentialGroup()
+                        .addGap(207, 207, 207)
+                        .addComponent(jButtonGithubConnect))
+                    .addGroup(tabGithubLayout.createSequentialGroup()
+                        .addGap(94, 94, 94)
+                        .addGroup(tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(tabGithubLayout.createSequentialGroup()
+                                .addComponent(jLabelPromptWebsiteLogin)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTextFieldWebsiteLoginUrl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(tabGithubLayout.createSequentialGroup()
+                                .addComponent(jLabelPromptUserCode)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTextFieldUserCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)))
+                    .addGroup(tabGithubLayout.createSequentialGroup()
+                        .addGap(106, 106, 106)
+                        .addComponent(jTextFieldGithubErrorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(613, Short.MAX_VALUE))
         );
         tabGithubLayout.setVerticalGroup(
             tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabGithubLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldNoGithubFilename, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelPromptChooseNetworkFilename))
+            .addGroup(tabGithubLayout.createSequentialGroup()
+                .addGap(64, 64, 64)
+                .addComponent(jButtonGithubConnect)
+                .addGap(36, 36, 36)
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneErrorMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
                 .addGroup(tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonGithubPublish)
-                    .addComponent(jButtonGithubCancel))
+                    .addComponent(jLabelPromptUserCode)
+                    .addComponent(jTextFieldUserCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelPromptWebsiteLogin)
+                    .addComponent(jTextFieldWebsiteLoginUrl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jLabelPromptCopyUrl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(9, 9, 9)
-                .addComponent(jTextUrlPublishedNetwork, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jLabel2)
+                .addGap(74, 74, 74)
+                .addComponent(jTextFieldGithubErrorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(82, Short.MAX_VALUE))
         );
 
         tabs.addTab(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.tabGithub.TabConstraints.tabTitle"), tabGithub); // NOI18N
@@ -173,38 +150,61 @@ public class JPanelWebExport extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonGithubPublishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGithubPublishActionPerformed
-        String filename = jTextFieldNoGithubFilename.getText();
-        responsePublishingAction = PublishingActions.publishToRetinaViaNocodeFunctions(filename);
-        if (responsePublishingAction.has("200")) {
-            String urlPublishedGraph = "https://ouestware.gitlab.io/retina/beta/#/graph/?url=" + "https://test.nocodefunctions.com/gephi-viewer/published/" + filename;
-            jTextUrlPublishedNetwork.setText(urlPublishedGraph);
-            jTextUrlPublishedNetwork.setVisible(true);
-            jLabelPromptCopyUrl.setVisible(true);
-        } else if (!responsePublishingAction.keySet().isEmpty()) {
-            jTextAreaErrorMessage.setVisible(true);
-            jTextAreaErrorMessage.setText(responsePublishingAction.get(responsePublishingAction.keySet().iterator().next()).getAsString());
-        }
-    }//GEN-LAST:event_jButtonGithubPublishActionPerformed
-
-    private void jTextUrlPublishedNetworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextUrlPublishedNetworkActionPerformed
+    private void jTextFieldWebsiteLoginUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldWebsiteLoginUrlActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextUrlPublishedNetworkActionPerformed
+    }//GEN-LAST:event_jTextFieldWebsiteLoginUrlActionPerformed
+
+    private void jButtonGithubConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGithubConnectActionPerformed
+        responseGithubConnectAction = PublishingActions.connectToGithub();
+        if (!responseGithubConnectAction.has("user_code")) {
+            jTextFieldGithubErrorMsg.setText("error retrieving your user code");
+            return;
+        } else {
+            String userCode = responseGithubConnectAction.getAsJsonArray("user_code").getAsString();
+            String deviceCode = responseGithubConnectAction.getAsJsonArray("device_code").getAsString();
+            jTextFieldUserCode.setVisible(true);
+            jTextFieldUserCode.setText(userCode);
+            JsonObject resultGithubPolling = PublishingActions.pollGithubToCheckForUserAuth(deviceCode);
+            if (resultGithubPolling.has("access_token")) {
+                String access_token = resultGithubPolling.get("access_token").getAsString();
+                Preferences preferences = NbPreferences.forModule(this.getClass());
+                preferences.put("access_token", access_token);
+            } else {
+                jTextFieldGithubErrorMsg.setText("error - the user code was not entered on Github");
+                return;
+            }
+            JsonObject jsonObjectOfGexfAsStringRetrieval = PublishingActions.getGexfAsString();
+            if (!jsonObjectOfGexfAsStringRetrieval.has("200")) {
+                if (!jsonObjectOfGexfAsStringRetrieval.keySet().isEmpty()) {
+                    String errorKey = jsonObjectOfGexfAsStringRetrieval.keySet().iterator().next();
+                    jTextFieldGithubErrorMsg.setText(jsonObjectOfGexfAsStringRetrieval.get(errorKey).getAsString());
+                } else {
+                    jTextFieldGithubErrorMsg.setText("unspecified error when retrieving gexf of current network");
+                }
+            } else {
+                String gexf = jsonObjectOfGexfAsStringRetrieval.getAsJsonArray("200").getAsString();
+                Preferences preferences = NbPreferences.forModule(this.getClass());
+                String accessToken = preferences.get("access_token", "");
+                if (accessToken.isBlank()) {
+                    jTextFieldGithubErrorMsg.setText("error retrieving access token from user preferences");
+                } else {
+                    PublishingActions.postGexfToGist(gexf, accessToken);
+                }
+            }
+        }
+    }//GEN-LAST:event_jButtonGithubConnectActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonGithubCancel;
-    private javax.swing.JButton jButtonGithubPublish;
-    private javax.swing.JLabel jLabelPromptChooseNetworkFilename;
-    private javax.swing.JLabel jLabelPromptCopyUrl;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPaneErrorMessage;
-    private javax.swing.JTextArea jTextAreaErrorMessage;
-    private javax.swing.JTextArea jTextAreaNoGithub;
-    private javax.swing.JTextField jTextFieldNoGithubFilename;
-    private javax.swing.JTextField jTextUrlPublishedNetwork;
+    private javax.swing.JButton jButtonGithubConnect;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabelPromptUserCode;
+    private javax.swing.JLabel jLabelPromptWebsiteLogin;
+    private javax.swing.JTextField jTextFieldGithubErrorMsg;
+    private javax.swing.JTextField jTextFieldUserCode;
+    private javax.swing.JTextField jTextFieldWebsiteLoginUrl;
     private javax.swing.JPanel tabGithub;
-    private javax.swing.JPanel tabNoGithub;
     private javax.swing.JTabbedPane tabs;
     // End of variables declaration//GEN-END:variables
 }
