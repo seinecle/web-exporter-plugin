@@ -1,9 +1,16 @@
-## Web Exporters
+# Gephi Plugin: Web exporters
 
-This plugin for Gephi helps you export your network to the web, so that you can share it easily.
+This is a work in progress during the Gephi Code Retreat (2022). The plugin will allow users to:
 
-## License
-Apache 2.0
+- export a gexf file directly from the Gephi desktop app
+- the exported gexf file gets hosted on the web and users get a url that allows them to explore it directly or share the url
+
+## Types of export
+
+At the moment: Retina only: https://ouestware.gitlab.io/retina/beta
+
+Hosting: through test.nocodefunctions.com (works already) or through a gist (active development)
 
 ## Author and contact
-Clement Levallois - admin@clementlevallois.net - https://nocodefunctions.com
+Plugin: Clement Levallois (admin@clementlevallois.net or https://twitter.com/seinecle)
+Retina: https://ouestware.gitlab.io/retina/beta
