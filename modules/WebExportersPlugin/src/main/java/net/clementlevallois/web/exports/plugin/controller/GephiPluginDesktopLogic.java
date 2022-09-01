@@ -7,12 +7,8 @@ package net.clementlevallois.web.exports.plugin.controller;
  *
  * @author LEVALLOIS
  */
-import com.google.gson.JsonObject;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionRegistration;
@@ -35,7 +31,7 @@ import org.openide.util.NbBundle.Messages;
     @ActionReference(path = "Menu/File/Publish to the web", position = 3333)
 })
 @Messages("CTL_Retina=with Retina")
-public final class GephiPluginLogic implements ActionListener {
+public final class GephiPluginDesktopLogic implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {

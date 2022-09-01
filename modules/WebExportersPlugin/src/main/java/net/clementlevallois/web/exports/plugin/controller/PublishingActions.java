@@ -30,7 +30,7 @@ import org.openide.util.Lookup;
 public class PublishingActions {
 
     public static JsonObject getGexfAsString() {
-        JsonObject jsonObject= new JsonObject();
+        JsonObject jsonObject = new JsonObject();
         ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
         if (pc.getCurrentProject() == null) {
             jsonObject.addProperty("95", "create or open a project with a network");
@@ -49,7 +49,7 @@ public class PublishingActions {
         StringWriter stringWriter = new StringWriter();
         ec.exportWriter(stringWriter, (CharacterExporter) exporterGexf);
         String gexfToSendAsString = stringWriter.toString();
-        
+
         jsonObject.addProperty("200", gexfToSendAsString);
 
         return jsonObject;
@@ -61,15 +61,18 @@ public class PublishingActions {
         try {
             HttpClient client = HttpClient.newHttpClient();
             String url = "https://github.com/login/oauth/access_token";
-            JsonObject jo = new JsonObject();
-            jo.addProperty("client_id", clientId);
-            jo.addProperty("device_code", deviceCode);
-            jo.addProperty("grant_type", "urn:ietf:params:oauth:grant-type:device_code");
-            String joAsString = jo.toString();
+
+            String inputParams = "client_id="
+                    + clientId
+                    + "&"
+                    + "device_code="
+                    + deviceCode
+                    + "&"
+                    + "grant_type=urn:ietf:params:oauth:grant-type:device_code";
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("accept", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(joAsString))
+                    .POST(HttpRequest.BodyPublishers.ofString(inputParams))
                     .build();
 
             boolean success = false;
@@ -81,7 +84,7 @@ public class PublishingActions {
                 JsonElement responseAsJsonElement = JsonParser.parseString(response.body());
                 jsonObject = responseAsJsonElement.getAsJsonObject();
                 if (jsonObject.has("access_token")) {
-                    success = true;
+                    System.out.println(jsonObject.toString());
                     break;
                 }
                 currDuration = (float) (System.currentTimeMillis() - startTime) / (float) 1000;
@@ -98,11 +101,12 @@ public class PublishingActions {
         try {
             HttpClient client = HttpClient.newHttpClient();
             String clientId = "Iv1.936245ffcd310336";
-            String url = "https://github.com/login/oauth/authorize?client_id=" + clientId + "&scope=gist";
+            String inputParams = "client_id=" + clientId + "&scope=gist";
+            String url = "https://github.com/login/device/code";
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("accept", "application/json")
-                    .GET()
+                    .POST(HttpRequest.BodyPublishers.ofString(inputParams))
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -116,16 +120,17 @@ public class PublishingActions {
     }
 
     public static JsonObject postGexfToGist(String gexfFile, String access_token) {
-        JsonObject responsePostGexfToGist = null;
+        JsonObject responsePostGexfToGist = new JsonObject();
         JsonObject bodyPostGexfToGist = new JsonObject();
         bodyPostGexfToGist.addProperty("description", "file sent from Gephi");
         bodyPostGexfToGist.addProperty("public", "true");
         JsonObject fileItself = new JsonObject();
-        String substring = UUID.randomUUID().toString().substring(0, 12);
+        String substring = UUID.randomUUID().toString().substring(0, 12) + ".gexf";
         JsonObject contentsFile = new JsonObject();
         contentsFile.addProperty("content", gexfFile);
         fileItself.add("network-" + substring, contentsFile);
         bodyPostGexfToGist.add("files", fileItself);
+        String bodyToString = bodyPostGexfToGist.toString();
 
         try {
             HttpClient client = HttpClient.newHttpClient();
@@ -133,13 +138,19 @@ public class PublishingActions {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("accept", "application/vnd.github+json")
-                    .header("bearer", access_token)
-                    .POST(HttpRequest.BodyPublishers.ofString(bodyPostGexfToGist.toString()))
+                    .header("Authorization", "Bearer " + access_token)
+                    .POST(HttpRequest.BodyPublishers.ofString(bodyToString))
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            JsonElement responseAsJsonElement = JsonParser.parseString(response.body());
-            responsePostGexfToGist = responseAsJsonElement.getAsJsonObject();
+            if (response.statusCode() < 200 || response.statusCode() > 299) {
+                JsonObject error = new JsonObject();
+                error.addProperty(String.valueOf(response.statusCode()), response.body());
+            } else {
+                JsonElement responseAsJsonElement = JsonParser.parseString(response.body());
+                JsonObject responseBodyAsSJsonObject = responseAsJsonElement.getAsJsonObject();
+                responsePostGexfToGist.add(String.valueOf(response.statusCode()), responseBodyAsSJsonObject);
+            }
 
         } catch (IOException | InterruptedException ex) {
             Exceptions.printStackTrace(ex);
