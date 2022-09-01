@@ -12,8 +12,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.UUID;
 import java.util.prefs.Preferences;
-import javax.swing.SwingUtilities;
 
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
@@ -45,6 +45,8 @@ public class JPanelWebExport extends javax.swing.JPanel {
         }
         jTextFieldGithubErrorMsg.setBackground(Color.WHITE);
         jTextFieldGithubErrorMsg.setText("");
+        jTextFieldUserCode.setForeground(Color.RED);
+        jTextAreaUrls.setText("");
     }
 
     SwingWorker pollWorker = new SwingWorker<Void, Integer>() {
@@ -100,6 +102,7 @@ public class JPanelWebExport extends javax.swing.JPanel {
                 accessToken = responseGithubUserCodeInput.get("access_token").getAsString();
                 Preferences preferences = NbPreferences.forModule(this.getClass());
                 preferences.put("access_token", accessToken);
+                jTextFieldGithubErrorMsg.setForeground(Color.decode("#45ba48"));
                 jTextFieldGithubErrorMsg.setText("success. switch to the tab 'publish'");
             } else {
                 jTextFieldGithubErrorMsg.setText("error - the user code was not entered on the website.");
@@ -152,7 +155,11 @@ public class JPanelWebExport extends javax.swing.JPanel {
         jButtonPublish = new javax.swing.JButton();
         jTextFieldUrlPublishedGraph = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        jTextFieldPublishErrorMsg = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextAreaUrls = new javax.swing.JTextArea();
+
+        tabs.setMinimumSize(new java.awt.Dimension(700, 454));
+        tabs.setPreferredSize(new java.awt.Dimension(700, 454));
 
         jButtonGithubConnect.setBackground(new java.awt.Color(204, 204, 204));
         org.openide.awt.Mnemonics.setLocalizedText(jButtonGithubConnect, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jButtonGithubConnect.text")); // NOI18N
@@ -166,21 +173,11 @@ public class JPanelWebExport extends javax.swing.JPanel {
         jTextFieldUserCode.setText(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jTextFieldUserCode.text")); // NOI18N
 
         jTextFieldWebsiteLoginUrl.setText(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jTextFieldWebsiteLoginUrl.text")); // NOI18N
-        jTextFieldWebsiteLoginUrl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldWebsiteLoginUrlActionPerformed(evt);
-            }
-        });
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jLabel2.text")); // NOI18N
 
         jTextFieldGithubErrorMsg.setForeground(new java.awt.Color(255, 0, 0));
         jTextFieldGithubErrorMsg.setText(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jTextFieldGithubErrorMsg.text")); // NOI18N
-        jTextFieldGithubErrorMsg.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldGithubErrorMsgActionPerformed(evt);
-            }
-        });
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jLabel3.text")); // NOI18N
 
@@ -188,11 +185,6 @@ public class JPanelWebExport extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jLabel4.text")); // NOI18N
 
         jTextField1.setText(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jTextField1.text")); // NOI18N
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jLabel5.text")); // NOI18N
 
@@ -226,12 +218,13 @@ public class JPanelWebExport extends javax.swing.JPanel {
         tabGithubLayout.setHorizontalGroup(
             tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tabGithubLayout.createSequentialGroup()
+                .addGap(23, 23, 23)
                 .addGroup(tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(jLabel5)
                     .addGroup(tabGithubLayout.createSequentialGroup()
                         .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(tabGithubLayout.createSequentialGroup()
                         .addGap(16, 16, 16)
@@ -254,22 +247,18 @@ public class JPanelWebExport extends javax.swing.JPanel {
                     .addGroup(tabGithubLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(jLabel1))
-                    .addComponent(jLabel2))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(tabGithubLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
                     .addComponent(jLabelAlreadyLoggedIn)
                     .addGroup(tabGithubLayout.createSequentialGroup()
                         .addComponent(jTextFieldGithubErrorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(120, 120, 120)
                         .addComponent(jButtonResetLogin)))
-                .addContainerGap(647, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         tabGithubLayout.setVerticalGroup(
             tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabGithubLayout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
+                .addContainerGap(20, Short.MAX_VALUE)
                 .addComponent(jLabelAlreadyLoggedIn)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
@@ -277,13 +266,13 @@ public class JPanelWebExport extends javax.swing.JPanel {
                 .addGroup(tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(21, 21, 21)
                 .addGroup(tabGithubLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jButtonGithubConnect))
@@ -309,6 +298,7 @@ public class JPanelWebExport extends javax.swing.JPanel {
         tabs.addTab(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.tabGithub.TabConstraints.tabTitle"), tabGithub); // NOI18N
 
         jButtonPublish.setBackground(new java.awt.Color(204, 204, 204));
+        jButtonPublish.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jButtonPublish, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jButtonPublish.text")); // NOI18N
         jButtonPublish.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -319,47 +309,43 @@ public class JPanelWebExport extends javax.swing.JPanel {
         jTextFieldUrlPublishedGraph.setEditable(false);
         jTextFieldUrlPublishedGraph.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextFieldUrlPublishedGraph.setText(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jTextFieldUrlPublishedGraph.text")); // NOI18N
-        jTextFieldUrlPublishedGraph.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldUrlPublishedGraphActionPerformed(evt);
-            }
-        });
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jLabel10.text")); // NOI18N
 
-        jTextFieldPublishErrorMsg.setText(org.openide.util.NbBundle.getMessage(JPanelWebExport.class, "JPanelWebExport.jTextFieldPublishErrorMsg.text")); // NOI18N
+        jTextAreaUrls.setEditable(false);
+        jTextAreaUrls.setColumns(20);
+        jTextAreaUrls.setRows(5);
+        jScrollPane1.setViewportView(jTextAreaUrls);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 556, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(271, 271, 271)
+                        .addGap(150, 150, 150)
                         .addComponent(jButtonPublish))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(182, 182, 182)
-                        .addComponent(jTextFieldUrlPublishedGraph, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(72, 72, 72)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 556, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(136, 136, 136)
-                        .addComponent(jTextFieldPublishErrorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(620, Short.MAX_VALUE))
+                        .addGap(64, 64, 64)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1)
+                            .addComponent(jTextFieldUrlPublishedGraph, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE))))
+                .addContainerGap(138, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(55, 55, 55)
+                .addGap(23, 23, 23)
                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(89, 89, 89)
-                .addComponent(jButtonPublish)
-                .addGap(31, 31, 31)
-                .addComponent(jTextFieldUrlPublishedGraph, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(45, 45, 45)
-                .addComponent(jTextFieldPublishErrorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(jButtonPublish, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jTextFieldUrlPublishedGraph, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -371,43 +357,33 @@ public class JPanelWebExport extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(tabs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tabs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tabs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTextFieldWebsiteLoginUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldWebsiteLoginUrlActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldWebsiteLoginUrlActionPerformed
 
     private void jButtonGithubConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGithubConnectActionPerformed
         jTextFieldGithubErrorMsg.setBackground(Color.WHITE);
         jTextFieldGithubErrorMsg.setText("");
         responseGithubConnectAction = PublishingActions.connectToGithub();
         if (!responseGithubConnectAction.has("user_code")) {
+            jTextFieldUserCode.setForeground(Color.RED);
             jTextFieldGithubErrorMsg.setText("error retrieving your user code. Are you logged in Github?");
         } else {
             String userCode = responseGithubConnectAction.get("user_code").getAsString();
             deviceCode = responseGithubConnectAction.get("device_code").getAsString();
+            jTextFieldUserCode.setForeground(Color.decode("#45ba48"));
             jTextFieldUserCode.setText(userCode);
             pollWorker.execute();
         }
     }//GEN-LAST:event_jButtonGithubConnectActionPerformed
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
-    private void jTextFieldGithubErrorMsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldGithubErrorMsgActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldGithubErrorMsgActionPerformed
 
     private void jButtonResetLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetLoginActionPerformed
         Preferences preferences = NbPreferences.forModule(this.getClass());
@@ -416,50 +392,53 @@ public class JPanelWebExport extends javax.swing.JPanel {
         jTextFieldGithubErrorMsg.setText("token removed - the setup process has been reset.");
     }//GEN-LAST:event_jButtonResetLoginActionPerformed
 
-    private void jTextFieldUrlPublishedGraphActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldUrlPublishedGraphActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldUrlPublishedGraphActionPerformed
-
     private void jButtonPublishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPublishActionPerformed
         JsonObject jsonObjectOfGexfAsStringRetrieval = PublishingActions.getGexfAsString();
         if (!jsonObjectOfGexfAsStringRetrieval.has("200")) {
             if (!jsonObjectOfGexfAsStringRetrieval.keySet().isEmpty()) {
                 String errorKey = jsonObjectOfGexfAsStringRetrieval.keySet().iterator().next();
-                jTextFieldPublishErrorMsg.setText(jsonObjectOfGexfAsStringRetrieval.get(errorKey).getAsString());
+                jTextAreaUrls.setText(jsonObjectOfGexfAsStringRetrieval.get(errorKey).getAsString());
             } else {
-                jTextFieldPublishErrorMsg.setText("unspecified error when retrieving gexf of current network");
+                jTextAreaUrls.setText("unspecified error when retrieving gexf of current network");
             }
         } else {
             String gexf = jsonObjectOfGexfAsStringRetrieval.get("200").getAsString();
             Preferences preferences = NbPreferences.forModule(this.getClass());
             accessToken = preferences.get("access_token", "");
             if (accessToken.isBlank()) {
-                jTextFieldPublishErrorMsg.setText("error publishing (no token). Have you done the set up first?");
+                jTextAreaUrls.setText("error publishing (no token). Have you done the set up first?");
             } else {
-                JsonObject responseGistPublished = PublishingActions.postGexfToGist(gexf, accessToken);
+                String fileName = "network-" + UUID.randomUUID().toString().substring(0, 12) + ".gexf";
+
+                JsonObject responseGistPublished = PublishingActions.postGexfToGist(gexf, accessToken, fileName);
                 if (!responseGistPublished.has("201")) {
                     if (responseGistPublished.keySet().isEmpty()) {
-                        jTextFieldPublishErrorMsg.setText("Error publishing, no specific msg received");
+                        jTextAreaUrls.setText("Error publishing, no specific msg received");
                     } else {
                         String errorMsgInBodyKey = responseGistPublished.keySet().iterator().next();
-                        String errorMsgInBodyValue = responseGistPublished.get(errorMsgInBodyKey).getAsString();
-                        jTextFieldPublishErrorMsg.setText("Error publishing the gexf to a gist. Error code: " + errorMsgInBodyKey + "; " + "error msg: " + errorMsgInBodyValue);
+                        if (responseGistPublished.get(errorMsgInBodyKey) != null) {
+                            String errorMsgInBodyValue = responseGistPublished.get(errorMsgInBodyKey).getAsString();
+                            jTextAreaUrls.setText("Error publishing the gexf to a gist. Error code: " + errorMsgInBodyKey + "; " + "error msg: " + errorMsgInBodyValue);
+                        }
                     }
                 } else {
-                    String rawUrl = responseGistPublished.get("raw_url").getAsString();
-                    String htmlUrl = responseGistPublished.get("html_url").getAsString();
+                    JsonObject metadataOnGist = responseGistPublished.get("201").getAsJsonObject();
+                    String htmlUrl = metadataOnGist.get("html_url").getAsString();
+                    JsonObject metadataOnFiles = metadataOnGist.get("files").getAsJsonObject();
+                    JsonObject metadataOnOneFile = metadataOnFiles.get(fileName).getAsJsonObject();
+                    String rawUrl = metadataOnOneFile.get("raw_url").getAsString();
                     String retinaBareURl = "https://ouestware.gitlab.io/retina/beta/#/graph/";
-                    String retinaFullURl = retinaBareURl+"?url="+rawUrl;
-                    
-                    String textForUserWithURL = "The url of your uploaded gexf is:"
-                            +"\n"
+                    String retinaFullURl = retinaBareURl + "?url=" + rawUrl;
+
+                    String textForUserWithURL = "The url of your published network is:"
+                            + "\n"
                             + htmlUrl
                             + "\n\n"
-                            +"The url to visualize your graph on Retina is:"
-                            +"\n"      
+                            + "The url to visualize your graph directly is:"
+                            + "\n"
                             + retinaFullURl;
 
-                            jTextFieldPublishErrorMsg.setText(responseGistPublished.get("201").getAsJsonObject().toString());
+                    jTextAreaUrls.setText(textForUserWithURL);
                 }
             }
         }
@@ -482,10 +461,11 @@ public class JPanelWebExport extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelAlreadyLoggedIn;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextAreaUrls;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextFieldGithubErrorMsg;
-    private javax.swing.JTextField jTextFieldPublishErrorMsg;
     private javax.swing.JTextField jTextFieldUrlPublishedGraph;
     private javax.swing.JTextField jTextFieldUserCode;
     private javax.swing.JTextField jTextFieldWebsiteLoginUrl;

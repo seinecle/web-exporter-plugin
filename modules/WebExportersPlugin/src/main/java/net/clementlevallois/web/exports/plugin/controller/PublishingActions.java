@@ -119,16 +119,15 @@ public class PublishingActions {
         return responseCOnnectGithubAsJO;
     }
 
-    public static JsonObject postGexfToGist(String gexfFile, String access_token) {
+    public static JsonObject postGexfToGist(String gexfFile, String access_token, String fileName) {
         JsonObject responsePostGexfToGist = new JsonObject();
         JsonObject bodyPostGexfToGist = new JsonObject();
         bodyPostGexfToGist.addProperty("description", "file sent from Gephi");
         bodyPostGexfToGist.addProperty("public", "true");
         JsonObject fileItself = new JsonObject();
-        String substring = UUID.randomUUID().toString().substring(0, 12) + ".gexf";
         JsonObject contentsFile = new JsonObject();
         contentsFile.addProperty("content", gexfFile);
-        fileItself.add("network-" + substring, contentsFile);
+        fileItself.add(fileName, contentsFile);
         bodyPostGexfToGist.add("files", fileItself);
         String bodyToString = bodyPostGexfToGist.toString();
 

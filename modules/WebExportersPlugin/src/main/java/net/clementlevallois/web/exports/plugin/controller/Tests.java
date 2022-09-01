@@ -48,7 +48,7 @@ public class Tests {
                 if (accessToken.isBlank()) {
                     System.out.println("error retrieving access token from user preferences");
                 } else {
-                    PublishingActions.postGexfToGist(gexf, accessToken);
+                    PublishingActions.postGexfToGist(gexf, accessToken, "test.gexf");
                 }
             }
         }
